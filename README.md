@@ -33,16 +33,16 @@ There is another example further below which lets you start additional GNOME app
 
 ```bash
 # Run the container in detached mode.
-POD=$(podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0)
+podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
 
 # Copy the framebuffer of xvfb.
-podman cp $POD:/opt/Xvfb_screen0 .
+podman cp $(podman ps -q -l):/opt/Xvfb_screen0 .
 
 # We can stop the container again.
-podman stop $POD
+podman stop $(podman ps -q -l)
 
 # Convert it to jpeg.
 convert xwd:Xvfb_screen0 capture.jpg
