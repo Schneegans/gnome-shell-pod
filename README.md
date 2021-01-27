@@ -1,4 +1,4 @@
-# 📦 A container running GNOME Shell via xvfb
+# 📦 Run GNOME Shell in a Container!
 
 _:warning: Disclaimer: I have very little to no experience with Docker / Podman. I am sure that many aspects of this project can be improved significantly! Please report any suggestions via [GitHub Issues](https://github.com/Schneegans/gnome-shell-pod/issues)!_
 
@@ -13,8 +13,10 @@ Of course I know that this is exactly what Podman is not designed to be used for
 
 ## How Does It Work?
 
-The Ubuntu-based image installs `systemd`, `gnome-shell`, `gnome-shell-extension-prefs`, and `xvfb`.
-
+The Ubuntu-based image contains `systemd`, `gnome-shell`, `gnome-shell-extension-prefs`, and `xvfb`.
+The root user will auto-login via `systemd-logind.service.d` and run `gnome-shell` via `xvfb`.
+The framebuffer of `xvfb` is mapped to a file which can be copied to host memory and converted to an image.
+This way we can actually make "screenshots" of GNOME-Shell!
 
 ## How Do I Use It?
 
