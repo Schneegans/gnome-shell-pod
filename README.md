@@ -82,6 +82,40 @@ poweroff
   <img src ="capture2.jpg" />
 </p>
 
+### Using This in a GitHub Action
+
+When you try to use this container in a GitHub actions workflow, you will need to run podman with `sudo` (for whatever reason).
+But it works! Once the workflow run is finished, you can download the screenshot as artifact.
+
+```yaml
+name: Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run GNOME Shell
+      run: |
+        sudo apt-get install imagemagick -qq
+        POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0)
+        sleep 5
+        sudo podman cp $POD:/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
+        sudo podman stop $POD
+    - name: Upload Screenshot
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshot
+        path: capture.jpg
+```
+
 ## Known Issues
 
 For now, GNOME Shell fails to load any extensions.
