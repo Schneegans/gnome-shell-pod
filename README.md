@@ -13,8 +13,8 @@ Of course I know that this is exactly what Podman is not designed to be used for
 
 ## How Does It Work?
 
-The Ubuntu-based image contains `systemd`, `gnome-shell`, `gnome-shell-extension-prefs`, and `xvfb`.
-The root user will auto-login via `systemd-logind.service.d` and run `gnome-shell` via `xvfb`.
+The Ubuntu-based image contains `systemd`, `gnome-shell`, `gnome-shell-extension-prefs`, `xvfb`, and `xdotool`.
+A user called "gnomeshell" will auto-login via `systemd-logind.service.d` and run `gnome-shell` via `xvfb`.
 The framebuffer of `xvfb` is mapped to a file which can be copied to host memory and converted to an image.
 This way we can actually make "screenshots" of GNOME-Shell!
 
@@ -33,16 +33,16 @@ There is another example further below which lets you start additional GNOME app
 
 ```bash
 # Run the container in detached mode.
-podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0
+podman run --rm -td ghcr.io/schneegans/gnome-shell:latest
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
 
 # Copy the framebuffer of xvfb.
-podman cp $(podman ps -q -l):/opt/Xvfb_screen0 .
+podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 .
 
 # We can stop the container again.
-podman stop $(podman ps -q -l)
+podman stop $(podman ps -q -n 1)
 
 # Convert it to jpeg.
 convert xwd:Xvfb_screen0 capture.jpg
@@ -65,14 +65,14 @@ If you want to play around with GNOME Shell inside the pod, use these commands:
 ```bash
 # Run the container in interactive mode. This will automatically login the root user and
 # start GNOME Shell in the background. While you will see the output from GNOME Shell,
-# you will be able to execute commands from root's shell.
-podman run --rm -ti ghcr.io/schneegans/gnome-shell:1.0.0
+# you will be able to execute commands from an interactive shell.
+podman run --rm -ti ghcr.io/schneegans/gnome-shell:latest
 
 # For example, you can run this command inside the container:
 gnome-control-center
 
 # Now use another terminal on your host to capture and display a screenshot.
-# podman cp $(podman ps -q -l):/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg && eog capture.jpg
+# podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg && eog capture.jpg
 
 # You can kill the gnome-control-center with Ctrl-C and the poweroff the container.
 poweroff
@@ -80,6 +80,36 @@ poweroff
 
 <p align="center">
   <img src ="capture2.jpg" />
+</p>
+
+### Executing Commands from the Host Side
+
+If you started the container in detached mode, you can execute commands inside the container using `podman exec`. You only have to make sure to set the `DISPLAY` variable.
+
+```bash
+# Run the container in detached mode.
+podman run --rm -td ghcr.io/schneegans/gnome-shell:latest
+
+# Wait some time to make sure that GNOME Shell has been started.
+sleep 5
+
+# Click the activities button.
+podman exec --env DISPLAY=:99 $(podman ps -q -n 1) xdotool mousemove 10 10 click 1 
+sleep 1
+
+# Click the applications grid button.
+podman exec --env DISPLAY=:99 $(podman ps -q -n 1) xdotool mousemove 50 550 click 1 
+sleep 1
+
+# Then make a "screenshot" and display the image.
+podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg && eog capture.jpg
+
+# Finally stop the container.
+podman stop $(podman ps -q -n 1)
+```
+
+<p align="center">
+  <img src ="capture3.jpg" />
 </p>
 
 ### Using This in a GitHub Action
@@ -105,9 +135,9 @@ jobs:
     - name: Run GNOME Shell
       run: |
         sudo apt-get install imagemagick -qq
-        POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0)
+        POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell:latest)
         sleep 5
-        sudo podman cp $POD:/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
+        sudo podman cp $POD:/home/gnomeshell/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
         sudo podman stop $POD
     - name: Upload Screenshot
       uses: actions/upload-artifact@v2
