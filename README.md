@@ -2,37 +2,88 @@
 
 _:warning: Disclaimer: I have very little to no experience with Docker / Podman. I am sure that many aspects of this project can be improved significantly! Please report any suggestions via [GitHub Issues](https://github.com/Schneegans/gnome-shell-pod/issues)!_
 
-## 🎉 The Idea
+## The Idea
 
-Developing high-quality extensions for GNOME Shell is challenging due to various reasons.
+Developing high-quality GNOME Shell extensions is challenging due to various reasons.
 One major issues is the lack of continuous integration possibilities.
 So I thought: Why not try getting GNOME Shell running on the runners of GitHub Actions?
 
-Of course I know that this is exactly what Docker & Podman are not designed to be used for...
+Of course I know that this is exactly what Podman is not designed to be used for...
 
 
-## 🔧 How Does It Work?
+## How Does It Work?
+
+The Ubuntu-based image installs `systemd`, `gnome-shell`, `gnome-shell-extension-prefs`, and `xvfb`.
 
 
+## How Do I Use It?
 
-
-## ✅ How Do I Use It?
-
-Some notes:
+For the following examples you will need to install imagemagick (for converting the xvfb framebuffer image) and, obviously, Podman.
+On Ubuntu-like distributions you can install them with this command:
 
 ```bash
-podman build -t ghcr.io/schneegans/gnome-shell:1.0.0 .
-podman push ghcr.io/schneegans/gnome-shell:1.0.0
-podman run --rm -it gnome-shell:1.0.0
-podman cp $(podman ps -q -l):/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg && eog capture.jpg
-podman stop $(podman ps -q -l)
+sudo apt-get install imagemagick podman
+```
+### Non-Interactive Usage
 
-# podman exec -it $(podman ps -q -l) gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/shell/extensions/flypie --method org.gnome.Shell.Extensions.flypie.ShowMenu 'Example Menu'
+Use the commands below to start GNOME Shell in the container and capture a screenshot.
+There is another example further below which lets you start additional GNOME applications!
+
+```bash
+# Run the container in detached mode.
+POD=$(podman run --rm -td ghcr.io/schneegans/gnome-shell:1.0.0)
+
+# Wait some time to make sure that GNOME Shell has been started.
+sleep 5
+
+# Copy the framebuffer of xvfb.
+podman cp $POD:/opt/Xvfb_screen0 .
+
+# We can stop the container again.
+podman stop $POD
+
+# Convert it to jpeg.
+convert xwd:Xvfb_screen0 capture.jpg
+
+# And finally display the image.
+# This way we can see that GNOME Shell is actually up and running!
+eog capture.jpg
+```
+
+
+
+<p align="center">
+  <img src ="capture1.jpg" />
+</p>
+
+### Interactive Usage
+
+If you want to play around with GNOME Shell inside the pod, use these commands:
+
+```bash
+# Run the container in interactive mode. This will automatically login the root user and
+# start GNOME Shell in the background. While you will see the output from GNOME Shell,
+# you will be able to execute commands from root's shell.
+podman run --rm -ti ghcr.io/schneegans/gnome-shell:1.0.0
+
+# For example, you can run this command inside the container:
+gnome-control-center
+
+# Now use another terminal on your host to capture and display a screenshot.
+# podman cp $(podman ps -q -l):/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg && eog capture.jpg
+
+# You can kill the gnome-control-center with Ctrl-C and the poweroff the container.
+poweroff
 ```
 
 <p align="center">
-  <img src ="capture.jpg" />
+  <img src ="capture2.jpg" />
 </p>
+
+## Known Issues
+
+For now, GNOME Shell fails to load any extensions.
+This is a pity, but I hope that we will solve this soon!
 
 ## :octocat: Contributing
 
