@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  deploy:
+    name: Upload Package
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    - name: GitHub Container Registry Login
+      run: echo "${{ secrets.CR_PAT }}" | podman login https://ghcr.io -u {{ github.actor }} --password-stdin
+    - name: Build and Push
+      run: |
+        # This is based on this article:
+        # https://medium.com/cooking-with-azure/publish-containers-to-github-container-registry-with-github-actions-4e39700ae14c
+        IMAGE=ghcr.io/{{ github.actor }}/gnome-shell
+
+        # Change all uppercase to lowercase
+        IMAGE=$(echo $IMAGE | tr '[A-Z]' '[a-z]')
+
+        # Strip git ref prefix from version
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+        # Strip "v" prefix from tag name
+        VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+        podman build -t $IMAGE:$VERSION -t $IMAGE:latest .
+        podman push $IMAGE:$VERSION $IMAGE:latest
