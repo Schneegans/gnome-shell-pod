@@ -29,6 +29,9 @@ RUN adduser --disabled-password --gecos "" gnomeshell &&                        
                    gnome-shell &"    >> /home/gnomeshell/.bashrc &&                   \
     echo "export DISPLAY=:99"        >> /home/gnomeshell/.bashrc
 
+# Add the script.
+ADD enable-extension.sh /home/gnomeshell
+
 # Do not attempt to boot into a graphical session.
 RUN systemctl set-default multi-user.target
 
