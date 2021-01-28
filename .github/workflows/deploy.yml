@@ -25,9 +25,12 @@ jobs:
 
         # Strip git ref prefix from version
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        echo $VERSION
 
         # Strip "v" prefix from tag name
         VERSION=$(echo $VERSION | sed -e 's/^v//')
+        echo $VERSION
+        echo $IMAGE:$VERSION
 
         podman build -t $IMAGE:$VERSION -t $IMAGE:latest .
         podman push $IMAGE:$VERSION $IMAGE:latest
