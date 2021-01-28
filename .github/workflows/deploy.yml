@@ -32,5 +32,9 @@ jobs:
         echo $VERSION
         echo $IMAGE:$VERSION
 
+        # Build the image
         podman build -t $IMAGE:$VERSION -t $IMAGE:latest .
-        podman push $IMAGE:$VERSION $IMAGE:latest
+
+        # Push both tags
+        podman push $IMAGE:$VERSION
+        podman push $$IMAGE:latest
