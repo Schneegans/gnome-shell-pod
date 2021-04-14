@@ -27,7 +27,7 @@ fi
 cd "$( cd "$( dirname "$0" )" && pwd )"
 
 # This is required as this script can be run from outside of the container.
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 
 # First install the extension.
 gnome-extensions install $1.zip
