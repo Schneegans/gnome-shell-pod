@@ -26,11 +26,11 @@ fi
 # Go to the location of this script.
 cd "$( cd "$( dirname "$0" )" && pwd )"
 
-# First install the extension.
-gnome-extensions install $1.zip
-
 # This is required as this script can be run from outside of the container.
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus
+
+# First install the extension.
+gnome-extensions install $1.zip
 
 # Then restart GNOME Shell. We wait some seconds afterwards to make sure that this has
 # finished. Is there an easier way to reload newly installed extensions?
