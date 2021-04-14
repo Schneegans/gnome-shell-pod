@@ -1,11 +1,10 @@
-FROM ubuntu:latest
+FROM ubuntu:focal
 
 # Else the installation of GNOME Shell will ask interactively for our time zone.
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -y &&                                                               \
-    apt-get install systemd gnome-shell gnome-shell-extension-prefs xvfb xdotool -y && \
-    apt-get clean
+    apt-get install systemd gnome-shell gnome-shell-extension-prefs xvfb xdotool -y
 
 # This is required to make systemd-logind work.
 RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                           \
@@ -31,8 +30,5 @@ RUN adduser --disabled-password --gecos "" gnomeshell &&                        
 
 # Add the script.
 ADD enable-extension.sh /home/gnomeshell
-
-# Do not attempt to boot into a graphical session.
-RUN systemctl set-default multi-user.target
 
 CMD [ "/usr/sbin/init" ]
