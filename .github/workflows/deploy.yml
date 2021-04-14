@@ -33,7 +33,7 @@ jobs:
         VERSION=$(echo $VERSION | sed -e 's/^v//')
 
         # Build the image
-        podman build -t $IMAGE:$VERSION -t $IMAGE:latest -f Dockerfile.{{ matrix.version }} .
+        podman build -t $IMAGE:$VERSION -t $IMAGE:latest -f Dockerfile.${{ matrix.version }} .
 
         # Push both tags
         podman push $IMAGE:$VERSION
