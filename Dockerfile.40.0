@@ -3,16 +3,13 @@ FROM ubuntu:hirsute
 # Else the installation of GNOME Shell will ask interactively for our time zone.
 ENV DEBIAN_FRONTEND noninteractive
 
-# Add the GNOME 40 PPA
-RUN apt update -y && apt -y install gnupg &&                                                             \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 63E7F399F8A476514BA06E1D5A120BFCE2F028D4 && \
-    { echo "deb http://ppa.launchpad.net/shemgp/gnome-40/ubuntu hirsute main";                           \
-      echo "deb-src http://ppa.launchpad.net/shemgp/gnome-40/ubuntu hirsute main";                       \
-    } >> /etc/apt/source.list
-
-# Install GNOME Shell, xvfb and xdotool.
-RUN apt update -y &&                                                                                    \
-    apt install -y systemd gnome-shell xvfb xdotool
+# Add the GNOME 40 PPA and install GNOME Shell, xvfb and xdotool.
+RUN apt update -y && apt -y install software-properties-common &&                                        \
+    add-apt-repository -y ppa:shemgp/gnome-40 &&                                                         \
+    apt update -y &&                                                                                     \
+    apt install -y systemd gnome-shell xvfb xdotool &&                                                   \
+    apt remove -y software-properties-common &&                                                          \
+    apt autoremove -y
 
 # This is required to make systemd-logind work.
 RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                                             \
