@@ -33,8 +33,10 @@ jobs:
         VERSION=$(echo $VERSION | sed -e 's/^v//')
 
         # Build the image
-        podman build -t $IMAGE:$VERSION -t $IMAGE:latest -f Dockerfile.${{ matrix.version }} .
+        # This requires root due to https://github.com/containers/podman/issues/9936
+        sudo podman build -t $IMAGE:$VERSION -t $IMAGE:latest -f Dockerfile.${{ matrix.version }} .
 
         # Push both tags
-        podman push $IMAGE:$VERSION
-        podman push $IMAGE:latest
+        # This requires root due to https://github.com/containers/podman/issues/9936
+        sudo podman push $IMAGE:$VERSION
+        sudo podman push $IMAGE:latest
