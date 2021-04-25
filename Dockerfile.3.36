@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install GNOME Shell, xvfb, xdotool, and gnome-shell-extension-prefs.
 RUN apt update -y &&                                                                                    \
-    apt install -y systemd gnome-shell xvfb xdotool gnome-shell-extension-prefs
+    apt install -y sudo systemd gnome-shell xvfb xdotool gnome-shell-extension-prefs
 
 # This is required to make systemd-logind work.
 RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                                            \
@@ -25,11 +25,13 @@ RUN mkdir -p /etc/systemd/system/console-getty.service.d &&                     
 # logs in. The framebuffer of xvfb will be mapped to /home/gnomeshell/Xvfb_screen0.
 # We also set the DISPLAY environment variable in case we want to launch applications.
 RUN adduser --disabled-password --gecos "" gnomeshell &&                                                \
+    echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers &&                                     \
     { echo "xvfb-run --server-args='-ac -screen 0 1600x900x24 -fbdir /home/gnomeshell' gnome-shell &";  \
       echo "export DISPLAY=:99";                                                                        \
     } > /home/gnomeshell/.bashrc
 
-# Add the script.
+# Add the scripts.
 ADD enable-extension.sh /home/gnomeshell
+ADD set-env.sh /home/gnomeshell
 
 CMD [ "/usr/sbin/init" ]

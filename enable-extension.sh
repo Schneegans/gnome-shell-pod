@@ -9,7 +9,7 @@
 # podman cp foo@bar.org.zip $(podman ps -q -n 1):/home/gnomeshell/                       #
 #                                                                                        #
 # Then you can run this script inside of the container with:                             #
-# podman exec --user gnomeshell --env DISPLAY=:99 $(podman ps -q -n 1) \                 #
+# podman exec --user gnomeshell $(podman ps -q -n 1) /home/gnomeshell/set-env.sh \       #
 #              /home/gnomeshell/enable-extension.sh foo@bar.org                          #
 # -------------------------------------------------------------------------------------- #
 
@@ -25,9 +25,6 @@ fi
 
 # Go to the location of this script.
 cd "$( cd "$( dirname "$0" )" && pwd )"
-
-# This is required as this script can be run from outside of the container.
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 
 # First install the extension.
 gnome-extensions install $1.zip
