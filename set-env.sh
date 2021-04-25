@@ -14,8 +14,8 @@
 # Exit on error.
 set -e
 
-# Get the process ID of the running bash shell of the logged in gnomeshell user.
-PID=$(pgrep -o -x bash)
+# Get the process ID of the running gnome-shell process.
+PID=$(pgrep -o -x gnome-shell)
 
 # Export all environment variables of the process.
 . <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/$PID/environ)

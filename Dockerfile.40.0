@@ -30,8 +30,8 @@ RUN mkdir -p /etc/systemd/system/console-getty.service.d &&                     
 # We also set the DISPLAY environment variable in case we want to launch applications.
 RUN adduser --disabled-password --gecos "" gnomeshell &&                                                \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers &&                                     \
-    { echo "xvfb-run --server-args='-ac -screen 0 1600x900x24 -fbdir /home/gnomeshell' gnome-shell &";  \
-      echo "export DISPLAY=:99";                                                                        \
+    { echo "export DISPLAY=:99";                                                                        \
+      echo "xvfb-run --server-args='-ac -screen 0 1600x900x24 -fbdir /home/gnomeshell' gnome-shell &";  \
     } > /home/gnomeshell/.bashrc
 
 # Add the scripts.
