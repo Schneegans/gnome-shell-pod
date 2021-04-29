@@ -31,11 +31,9 @@ gnome-extensions install $1.zip
 
 # Then restart GNOME Shell. We wait some seconds afterwards to make sure that this has
 # finished. Is there an easier way to reload newly installed extensions?
-echo -n "Restarting GNOME Shell... "
 busctl --user call org.gnome.Shell /org/gnome/Shell \
                    org.gnome.Shell Eval s 'Meta.restart("Restarting…")' --quiet
 sleep 3
-echo "Done."
 
 # Finally enable the extension.
 gnome-extensions enable $1
