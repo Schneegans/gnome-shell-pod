@@ -11,8 +11,8 @@ Of course I know that this is exactly what Podman is not designed to be used for
 
 **Anyway, here is what already works:**
 - [x] Multiple containers for various GNOME Shell versions:
-  - [x] 3.36 (based on Ubuntu 20.04)
-  - [x] 3.38 (based on Ubuntu 20.10)
+  - [x] 3.36.7 (based on Ubuntu 20.04)
+  - [x] 3.38.2 (based on Ubuntu 20.10)
   - [x] 40.0 (based on Ubuntu 21.04)
 - [x] GNOME Shell runs automatically when the container is started.
 - [x] You can launch other applications, such as `gnome-control-center`.
