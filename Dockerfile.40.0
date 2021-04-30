@@ -3,15 +3,22 @@ FROM ubuntu:hirsute
 # Else the installation of GNOME Shell will ask interactively for our time zone.
 ENV DEBIAN_FRONTEND noninteractive
 
-# Add the GNOME 40 PPA and install GNOME Shell, xvfb and xdotool. Then remove this
-# incomplete Ubuntu extension to prevent an error when GNOME Shell tries to load it.
+# This is run in the next step to make GNOME Shell log errors when an extension
+# preferences dialog fails to open.
+COPY patch.sh /opt
+
+# Add the GNOME 40 PPA and install GNOME Shell, xvfb and xdotool. Then apply the patch
+# and remove an incomplete Ubuntu extension to prevent an error when GNOME Shell tries
+# to load it.
 RUN apt update -y && apt -y install software-properties-common &&                        \
     add-apt-repository -y ppa:shemgp/gnome-40 &&                                         \
     apt update -y &&                                                                     \
-    apt install -y sudo gnome-shell xvfb xdotool gnome-shell-extension-prefs &&          \
-    apt remove -y software-properties-common &&                                          \
-    apt autoremove -y &&                                                                 \
-    rm -r /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com
+    apt install -y sudo xvfb xdotool libglib2.0-dev-bin patch &&                         \
+    apt install -y gnome-shell gnome-shell-extension-prefs &&                            \
+    rm -r /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com &&                    \
+    /opt/patch.sh &&                                                                     \
+    apt remove -y software-properties-common libglib2.0-dev-bin patch &&                 \
+    apt autoremove -y
 
 # The first is required to make systemd-logind work, the second
 # makes sure that the gnomeshell user gets logged in automatically.
@@ -33,8 +40,6 @@ RUN adduser --disabled-password --gecos "" gnomeshell &&                        
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
-ADD enable-extension.sh /home/gnomeshell
-ADD set-env.sh /home/gnomeshell
-ADD .profile /home/gnomeshell
+COPY enable-extension.sh set-env.sh .profile /home/gnomeshell
 
 CMD [ "/usr/sbin/init" ]
