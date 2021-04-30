@@ -52,7 +52,7 @@ If you want to play around with GNOME Shell inside the pod, use these commands:
 # Run the container in interactive mode. This will automatically login the root user and
 # start GNOME Shell in the background. While you will see the output from GNOME Shell,
 # you will be able to execute commands from an interactive shell.
-podman run --rm -ti ghcr.io/schneegans/gnome-shell-3.38:latest
+podman run --rm -ti ghcr.io/schneegans/gnome-shell:3.38
 
 # For example, you can run this command inside the container:
 gnome-control-center
@@ -85,7 +85,7 @@ Use the commands below to start a non-interactive container and capture a screen
 
 ```bash
 # Run the container in detached mode.
-podman run --rm -td ghcr.io/schneegans/gnome-shell-3.38:latest
+podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
@@ -112,7 +112,7 @@ The `gnomeshell` user can run passwordless `sudo`, so you can simply install pac
 
 ```bash
 # Run the container in detached mode.
-podman run --rm -td ghcr.io/schneegans/gnome-shell-3.38:latest
+podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
@@ -147,7 +147,7 @@ To simplify this process, another script (`/home/gnomeshell/enable-extension.sh`
 
 ```bash
 # Run the container in detached mode.
-podman run --rm -td ghcr.io/schneegans/gnome-shell-3.38:latest
+podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
@@ -189,7 +189,7 @@ If you started the container in detached mode, you can execute commands inside t
 
 ```bash
 # Run the container in detached mode.
-podman run --rm -td ghcr.io/schneegans/gnome-shell-3.38:latest
+podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38
 
 # Wait some time to make sure that GNOME Shell has been started.
 sleep 5
@@ -238,7 +238,7 @@ jobs:
     - name: Run GNOME Shell
       run: |
         sudo apt-get install imagemagick -qq
-        POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell-3.38:latest)
+        POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38)
         sleep 5
         sudo podman cp $POD:/home/gnomeshell/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
         sudo podman stop $POD
