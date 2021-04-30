@@ -21,24 +21,18 @@ jobs:
         echo "${{ secrets.CR_PAT }}" | sudo podman login ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Build and Push
       run: |
-        # This is based on this article:
-        # https://medium.com/cooking-with-azure/publish-containers-to-github-container-registry-with-github-actions-4e39700ae14c
-        IMAGE=ghcr.io/${{ github.actor }}/gnome-shell-${{ matrix.version }}
+        IMAGE=ghcr.io/${{ github.actor }}/gnome-shell
 
-        # Change all uppercase to lowercase
+        # Change all uppercase to lowercase.
         IMAGE=$(echo $IMAGE | tr '[A-Z]' '[a-z]')
 
-        # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        # Build the image. This requires root due to https://github.com/containers/podman/issues/9936
+        sudo podman build -t $IMAGE:${{ matrix.version }} -t $IMAGE:latest -f Dockerfile.${{ matrix.version }} .
 
-        # Strip "v" prefix from tag name
-        VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-        # Build the image
-        # This requires root due to https://github.com/containers/podman/issues/9936
-        sudo podman build -t $IMAGE:$VERSION -t $IMAGE:latest -f Dockerfile.${{ matrix.version }} .
-
-        # Push both tags
-        # This requires root due to https://github.com/containers/podman/issues/9936
-        sudo podman push $IMAGE:$VERSION
-        sudo podman push $IMAGE:latest
+        # Push the version tag. This requires root due to https://github.com/containers/podman/issues/9936
+        sudo podman push $IMAGE:${{ matrix.version }}
+        
+        # Push the latest tag for GNOME Shell 40.0
+        if [ "${{ matrix.version }}" = "40.0" ]; then
+          sudo podman push $IMAGE:latest
+        fi
