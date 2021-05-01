@@ -18,6 +18,11 @@ RUN apt update -y &&                                                            
     apt remove -y libglib2.0-dev-bin patch &&                                            \
     apt autoremove -y
 
+# Start Xvfb via systemd on display :99.
+COPY xvfb@.service /etc/systemd/system
+RUN systemctl enable xvfb@:99.service &&                                                 \
+    systemctl set-default multi-user.target
+
 # The first is required to make systemd-logind work, the second
 # makes sure that the gnomeshell user gets logged in automatically.
 RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                             \
@@ -31,9 +36,7 @@ RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                    
                                    --keep-baud console 115200,38400,9600 $TERM";         \
     } > /etc/systemd/system/console-getty.service.d/override.conf
 
-# Add the gnomeshell user with no password and run GNOME Shell as soon as this user
-# logs in. The framebuffer of xvfb will be mapped to /home/gnomeshell/Xvfb_screen0.
-# We also set the DISPLAY environment variable in case we want to launch applications.
+# Add the gnomeshell user with no password.
 RUN adduser --disabled-password --gecos "" gnomeshell &&                                 \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 

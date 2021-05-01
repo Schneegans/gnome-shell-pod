@@ -62,7 +62,7 @@ Now use another terminal on your host to capture and display a screenshot.
 
 ```bash
 # Copy the framebuffer of xvfb.
-podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 .
+podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 .
 
 # Convert it to jpeg.
 convert xwd:Xvfb_screen0 capture.jpg
@@ -91,7 +91,7 @@ podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38
 sleep 5
 
 # Now make a screenshot and show it!
-podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && \
+podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 . && \
        convert xwd:Xvfb_screen0 capture.jpg && \
        eog capture.jpg
 
@@ -126,7 +126,7 @@ podman exec --user gnomeshell $(podman ps -q -n 1) /home/gnomeshell/set-env.sh \
        gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/gnome/adwaita-day.jpg"
 
 # Now make a screenshot and show it!
-podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && \
+podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 . && \
        convert xwd:Xvfb_screen0 capture.jpg && \
        eog capture.jpg
 
@@ -171,7 +171,7 @@ podman exec --user gnomeshell --workdir /home/gnomeshell $(podman ps -q -n 1) ./
 sleep 2
 
 # Then make a "screenshot" and display the image.
-podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && \
+podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 . && \
       convert xwd:Xvfb_screen0 capture.jpg && \
       eog capture.jpg
 
@@ -203,7 +203,7 @@ podman exec --user gnomeshell --workdir /home/gnomeshell $(podman ps -q -n 1) ./
        xdotool mousemove 50 550 click 1 && sleep 1
 
 # Then make a "screenshot" and display the image.
-podman cp $(podman ps -q -n 1):/home/gnomeshell/Xvfb_screen0 . && \
+podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 . && \
        convert xwd:Xvfb_screen0 capture.jpg && \
        eog capture.jpg
 
@@ -240,7 +240,7 @@ jobs:
         sudo apt-get install imagemagick -qq
         POD=$(sudo podman run --rm -td ghcr.io/schneegans/gnome-shell:3.38)
         sleep 5
-        sudo podman cp $POD:/home/gnomeshell/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
+        sudo podman cp $POD:/opt/Xvfb_screen0 . && convert xwd:Xvfb_screen0 capture.jpg
         sudo podman stop $POD
     - name: Upload Screenshot
       uses: actions/upload-artifact@v2
