@@ -7,12 +7,11 @@ ENV DEBIAN_FRONTEND noninteractive
 # preferences dialog fails to open.
 COPY patch.sh /opt
 
-# Install GNOME Shell, xvfb, xdotool, and gnome-shell-extension-prefs. Then apply the
-# patch and remove an incomplete Ubuntu extension to prevent an error when GNOME Shell
-# tries to load it.
+# Install GNOME Session, xvfb, and xdotool. Then apply the patch and remove an incomplete
+# Ubuntu extension to prevent an error when GNOME Shell tries to load it.
 RUN apt update -y &&                                                                     \
-    apt install -y sudo xvfb xdotool libglib2.0-dev-bin patch &&                         \
-    apt install -y gnome-shell gnome-shell-extension-prefs &&                            \
+    apt install -y gnome-session gnome-shell-extension-prefs                             \
+                   sudo xvfb xdotool libglib2.0-dev-bin patch &&                         \
     rm -r /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com &&                    \
     /opt/patch.sh &&                                                                     \
     apt remove -y libglib2.0-dev-bin patch &&                                            \
