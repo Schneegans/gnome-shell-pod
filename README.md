@@ -249,6 +249,8 @@ jobs:
         path: capture.jpg
 ```
 
+A real-world example can be seen in the [repository of Fly-Pie](https://github.com/Schneegans/Fly-Pie). Here, a [run-test.sh](https://github.com/Schneegans/Fly-Pie/blob/develop/scripts/run-tests.sh) script executes all the tests on a container. This script can be run locally as well as on the runners of GitHub.
+
 
 ## :octocat: Contributing
 
