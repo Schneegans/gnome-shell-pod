@@ -49,9 +49,8 @@ sudo apt-get install imagemagick podman
 If you want to play around with GNOME Shell inside the pod, use these commands:
 
 ```bash
-# Run the container in interactive mode. This will automatically login the root user and
-# start GNOME Shell in the background. While you will see the output from GNOME Shell,
-# you will be able to execute commands from an interactive shell.
+# Run the container in interactive mode. This will automatically login the
+# gnomeshell user and start GNOME Shell in the background.
 podman run --rm -ti ghcr.io/schneegans/gnome-shell:3.38
 
 # For example, you can run this command inside the container:
