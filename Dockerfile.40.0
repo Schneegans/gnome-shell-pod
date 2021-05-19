@@ -3,10 +3,6 @@ FROM ubuntu:hirsute
 # Else the installation of GNOME Shell will ask interactively for our time zone.
 ENV DEBIAN_FRONTEND noninteractive
 
-# This is run in the next step to make GNOME Shell log errors when an extension
-# preferences dialog fails to open.
-COPY patch.sh /opt
-
 # Add the GNOME 40 PPA and install GNOME Session, xvfb and xdotool. Then apply the patch
 # and remove an incomplete Ubuntu extension to prevent an error when GNOME Shell tries
 # to load it.
@@ -16,7 +12,6 @@ RUN apt update -y && apt -y install software-properties-common &&               
     apt install -y gnome-session gnome-shell-extension-prefs                             \
                    sudo xvfb xdotool libglib2.0-dev-bin patch &&                         \
     rm -r /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com &&                    \
-    /opt/patch.sh &&                                                                     \
     apt remove -y software-properties-common libglib2.0-dev-bin patch &&                 \
     apt autoremove -y
 
