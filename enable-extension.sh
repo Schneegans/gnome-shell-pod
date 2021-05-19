@@ -27,7 +27,7 @@ fi
 cd "$( cd "$( dirname "$0" )" && pwd )"
 
 # First install the extension.
-gnome-extensions install $1.zip
+gnome-extensions install $1.shell-extension.zip
 
 # Then restart GNOME Shell. We wait some seconds afterwards to make sure that this has
 # finished. Is there an easier way to reload newly installed extensions?
