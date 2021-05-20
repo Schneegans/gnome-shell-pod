@@ -18,6 +18,7 @@ RUN systemctl unmask systemd-logind.service console-getty.service getty.target &
     sudo -u gnomeshell systemctl enable --user gnome-xsession@:99
 
 # Add the scripts.
-COPY enable-extension.sh set-env.sh /home/gnomeshell/
+COPY enable-extension.sh set-env.sh set-env-wayland.sh /home/gnomeshell/
+COPY nested-wayland.sh /usr/bin/
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]

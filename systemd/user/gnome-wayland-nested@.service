@@ -1,0 +1,7 @@
+[Unit]
+Description=Run nested Wayland gnome session for display %I
+After=gnome-xsession@%i.service
+
+[Service]
+Environment="DISPLAY=%I"
+ExecStart=dbus-run-session -- nested-wayland.sh
