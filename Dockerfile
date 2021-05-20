@@ -1,8 +1,6 @@
-FROM fedora:34
+ARG fedora_version=32
+FROM fedora:${fedora_version}
 
-# Add the GNOME 40 PPA and install GNOME Session, xvfb and xdotool. Then apply the patch
-# and remove an incomplete Ubuntu extension to prevent an error when GNOME Shell tries
-# to load it.
 RUN dnf update -y &&                                                                     \
     dnf install -y gnome-session-xsession gnome-extensions-app \
                    sudo xorg-x11-server-Xvfb xdotool glib2-devel patch

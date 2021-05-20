@@ -5,7 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ["3.36", "3.38", "40.0"]
+        include:
+          - version: "3.36"
+            fedora_version: "32"
+          - version: "3.38"
+            fedora_version: "33"
+          - version: "40.0"
+            fedora_version: "34"
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
@@ -21,7 +27,8 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile.${{ matrix.version }}
+          build-args: |
+            fedora_version=${{ matrix.fedora_version }}
           pull: true
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
