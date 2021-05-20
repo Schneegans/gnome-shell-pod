@@ -14,11 +14,12 @@ RUN systemctl unmask systemd-logind.service console-getty.service getty.target &
     systemctl enable xvfb@:99.service && \
     systemctl set-default multi-user.target && \
     adduser -m -U -G users,adm,wheel gnomeshell && \
-    echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    sudo -u gnomeshell systemctl enable --user gnome-xsession@:99
+    echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
-COPY enable-extension.sh set-env.sh set-env-wayland.sh /home/gnomeshell/
-COPY nested-wayland.sh /usr/bin/
+COPY enable-extension.sh set-env.sh /home/gnomeshell/
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]
+
+ARG enable_unit=gnome-xsession
+RUN sudo -u gnomeshell systemctl enable --user ${enable_unit}@:99

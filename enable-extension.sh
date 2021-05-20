@@ -13,15 +13,15 @@
 #              /home/gnomeshell/enable-extension.sh foo@bar.org                          #
 # -------------------------------------------------------------------------------------- #
 
-# Exit on error.
-set -e
-
 # Check that an argumemt is given.
 if [ $# -eq 0 ]
   then
     echo "Please give the zip archive of your extension as parameter!"
     exit 0
 fi
+
+# Exit on error.
+set -ex
 
 UUID=$(unzip -p "$1" metadata.json | jq -r .uuid)
 
@@ -30,8 +30,14 @@ gnome-extensions install $1
 
 # Then restart GNOME Shell. We wait some seconds afterwards to make sure that this has
 # finished. Is there an easier way to reload newly installed extensions?
-busctl --user call org.gnome.Shell /org/gnome/Shell \
-                   org.gnome.Shell Eval s 'Meta.restart("Restarting…")' --quiet
+IS_WAYLAND="$(busctl --user call -j org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.is_wayland_compositor()' | jq -r '.data[1]')"
+
+if [[ "$IS_WAYLAND" == "true" ]]; then
+    systemctl --user restart 'gnome-wayland-nested@*'
+else
+    busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
+fi
+
 sleep 3
 
 # Finally enable the extension.

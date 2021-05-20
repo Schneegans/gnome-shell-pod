@@ -1,7 +1,10 @@
 [Unit]
 Description=Run nested Wayland gnome session for display %I
-After=gnome-xsession@%i.service
 
 [Service]
 Environment="DISPLAY=%I"
-ExecStart=dbus-run-session -- nested-wayland.sh
+Environment="MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080@60.0"
+ExecStart=gnome-shell --nested --wayland
+
+[Install]
+WantedBy=default.target
