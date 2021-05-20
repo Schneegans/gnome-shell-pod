@@ -14,11 +14,7 @@
 # Exit on error.
 set -e
 
-# Get the process ID of the running gnome-shell process.
-PID=$(pgrep -o -x gnome-shell)
-
-# Export all environment variables of the process.
-. <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/$PID/environ)
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
 
 # Run the given command.
-eval "$@"
+exec "$@"

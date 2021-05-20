@@ -29,7 +29,10 @@ RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                    
 RUN adduser -m -U -G users,adm,wheel gnomeshell &&                                 \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+COPY gnome-xsession@.service /etc/systemd/user/
+RUN sudo -u gnomeshell systemctl enable --user gnome-xsession@:99
+
 # Add the scripts.
-COPY enable-extension.sh set-env.sh .profile /home/gnomeshell/
+COPY enable-extension.sh set-env.sh /home/gnomeshell/
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]
