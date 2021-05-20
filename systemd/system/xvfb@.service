@@ -1,6 +1,7 @@
 [Unit]
 Description=Run Xvfb for display %I
 After=network.target
+Before=console-getty.service
 
 [Service]
 ExecStart=/usr/bin/Xvfb %I -screen 0 1920x1080x24 -fbdir /run
