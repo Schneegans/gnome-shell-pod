@@ -3,7 +3,7 @@ FROM fedora:${fedora_version}
 
 RUN dnf update -y &&                                                                     \
     dnf install -y gnome-session-xsession gnome-extensions-app \
-                   sudo xorg-x11-server-Xvfb xdotool glib2-devel patch
+                   sudo xorg-x11-server-Xvfb xdotool glib2-devel patch jq unzip
 
 # Start Xvfb via systemd on display :99.
 COPY xvfb@.service /etc/systemd/system

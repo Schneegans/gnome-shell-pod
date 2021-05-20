@@ -23,11 +23,10 @@ if [ $# -eq 0 ]
     exit 0
 fi
 
-# Go to the location of this script.
-cd "$( cd "$( dirname "$0" )" && pwd )"
+UUID=$(unzip -p "$1" metadata.json | jq -r .uuid)
 
 # First install the extension.
-gnome-extensions install $1.shell-extension.zip
+gnome-extensions install $1
 
 # Then restart GNOME Shell. We wait some seconds afterwards to make sure that this has
 # finished. Is there an easier way to reload newly installed extensions?
@@ -36,4 +35,4 @@ busctl --user call org.gnome.Shell /org/gnome/Shell \
 sleep 3
 
 # Finally enable the extension.
-gnome-extensions enable $1
+gnome-extensions enable $UUID
