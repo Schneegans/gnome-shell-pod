@@ -1,19 +1,11 @@
-FROM ubuntu:hirsute
-
-# Else the installation of GNOME Shell will ask interactively for our time zone.
-ENV DEBIAN_FRONTEND noninteractive
+FROM fedora:34
 
 # Add the GNOME 40 PPA and install GNOME Session, xvfb and xdotool. Then apply the patch
 # and remove an incomplete Ubuntu extension to prevent an error when GNOME Shell tries
 # to load it.
-RUN apt update -y && apt -y install software-properties-common &&                        \
-    add-apt-repository -y ppa:shemgp/gnome-40 &&                                         \
-    apt update -y &&                                                                     \
-    apt install -y gnome-session gnome-shell-extension-prefs                             \
-                   sudo xvfb xdotool libglib2.0-dev-bin patch &&                         \
-    rm -r /usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com &&                    \
-    apt remove -y software-properties-common libglib2.0-dev-bin patch &&                 \
-    apt autoremove -y
+RUN dnf update -y &&                                                                     \
+    dnf install -y gnome-session-xsession gnome-extensions-app \
+                   sudo xorg-x11-server-Xvfb xdotool glib2-devel patch
 
 # Start Xvfb via systemd on display :99.
 COPY xvfb@.service /etc/systemd/system
@@ -29,15 +21,15 @@ RUN mkdir -p /etc/systemd/system/systemd-logind.service.d &&                    
     mkdir -p /etc/systemd/system/console-getty.service.d &&                              \
     { echo "[Service]";                                                                  \
       echo "ExecStart=";                                                                 \
-      echo "ExecStart=-/sbin/getty --autologin gnomeshell --noclear                      \
-                                   --keep-baud console 115200,38400,9600 $TERM";         \
+      echo "ExecStart=-/usr/sbin/agetty --autologin gnomeshell --noclear                 \
+                                        --keep-baud console 115200,38400,9600 $TERM";    \
     } > /etc/systemd/system/console-getty.service.d/override.conf
 
 # Add the gnomeshell user with no password.
-RUN adduser --disabled-password --gecos "" gnomeshell &&                                 \
+RUN adduser -m -U -G users,adm,wheel gnomeshell &&                                 \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
-COPY enable-extension.sh set-env.sh .profile /home/gnomeshell
+COPY enable-extension.sh set-env.sh .profile /home/gnomeshell/
 
-CMD [ "/usr/sbin/init" ]
+CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]

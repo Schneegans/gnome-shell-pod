@@ -2,4 +2,4 @@
 export DISPLAY=:99
 
 # Run GNOME Shell in the background.
-/etc/X11/Xsession gnome-session &
+/etc/X11/xinit/Xsession gnome-session &
