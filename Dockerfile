@@ -2,7 +2,7 @@ ARG fedora_version=32
 FROM fedora:${fedora_version}
 
 RUN dnf update -y &&                                                                     \
-    dnf install -y gnome-session-xsession gnome-extensions-app \
+    dnf install -y gnome-session-xsession gnome-extensions-app vte291 \
                    sudo xorg-x11-server-Xvfb xdotool glib2-devel patch jq unzip
 
 COPY systemd /etc/systemd
