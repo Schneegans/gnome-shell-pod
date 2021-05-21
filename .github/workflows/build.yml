@@ -6,7 +6,6 @@ jobs:
     strategy:
       matrix:
         fedora_version: ["32", "33", "34"]
-        mode: ["xsession", "wayland-nested"]
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
@@ -15,21 +14,60 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: docker_meta
+
+      - id: docker_meta_base
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-${{ matrix.mode }}
+          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base
+      - id: docker_meta_xsession
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-xsession
+      - id: docker_meta_wayland_nested
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested
+
+      - id: docker_build_base
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.base
+          build-args: |
+            fedora_version=${{ matrix.fedora_version }}
+          pull: true
+          push: true
+          tags: ${{ steps.docker_meta_base.outputs.tags }}
+          labels: ${{ steps.docker_meta_base.outputs.labels }}
+          cache-from: |
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base:master
+            ${{ steps.docker_meta_base.outputs.tags }}
+          cache-to: type=inline
+
       - uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./Dockerfile.xsession
           build-args: |
-            fedora_version=${{ matrix.fedora_version }}
-            enable_unit=gnome-${{ matrix.mode }}
-          pull: true
+            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.docker_meta_xsession.outputs.tags }}
+          labels: ${{ steps.docker_meta_xsession.outputs.labels }}
           cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-${{ matrix.mode }}:master
-            ${{ steps.docker_meta.outputs.tags }}
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-xsession:master
+            ${{ steps.docker_meta_xsession.outputs.tags }}
+          cache-to: type=inline
+
+      - uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.wayland-nested
+          build-args: |
+            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
+          push: true
+          tags: ${{ steps.docker_meta_wayland_nested.outputs.tags }}
+          labels: ${{ steps.docker_meta_wayland_nested.outputs.labels }}
+          cache-from: |
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested:master
+            ${{ steps.docker_meta_wayland_nested.outputs.tags }}
           cache-to: type=inline
