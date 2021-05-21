@@ -27,6 +27,10 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested
+      - id: docker_meta_wayland_nested_highdpi
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested-highdpi
 
       - id: docker_build_base
         uses: docker/build-push-action@v2
@@ -70,4 +74,18 @@ jobs:
           cache-from: |
             ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested:master
             ${{ steps.docker_meta_wayland_nested.outputs.tags }}
+          cache-to: type=inline
+
+      - uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.wayland-nested-highdpi
+          build-args: |
+            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
+          push: true
+          tags: ${{ steps.docker_meta_wayland_nested_highdpi.outputs.tags }}
+          labels: ${{ steps.docker_meta_wayland_nested_highdpi.outputs.labels }}
+          cache-from: |
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested-highdpi:master
+            ${{ steps.docker_meta_wayland_nested_highdpi.outputs.tags }}
           cache-to: type=inline

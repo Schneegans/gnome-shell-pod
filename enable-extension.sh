@@ -34,6 +34,7 @@ IS_WAYLAND="$(busctl --user call -j org.gnome.Shell /org/gnome/Shell org.gnome.S
 
 if [[ "$IS_WAYLAND" == "true" ]]; then
     systemctl --user restart 'gnome-wayland-nested@*'
+    systemctl --user restart 'gnome-wayland-nested-highdpi@*'
 else
     busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
 fi
