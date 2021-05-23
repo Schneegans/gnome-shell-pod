@@ -15,77 +15,21 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: docker_meta_base
+      - id: docker_meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base
-      - id: docker_meta_xsession
-        uses: docker/metadata-action@v3
-        with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-xsession
-      - id: docker_meta_wayland_nested
-        uses: docker/metadata-action@v3
-        with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested
-      - id: docker_meta_wayland_nested_highdpi
-        uses: docker/metadata-action@v3
-        with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested-highdpi
+          images: ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}
 
-      - id: docker_build_base
-        uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.base
           build-args: |
             fedora_version=${{ matrix.fedora_version }}
           pull: true
           push: true
-          tags: ${{ steps.docker_meta_base.outputs.tags }}
-          labels: ${{ steps.docker_meta_base.outputs.labels }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base:master
-            ${{ steps.docker_meta_base.outputs.tags }}
-          cache-to: type=inline
-
-      - uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile.xsession
-          build-args: |
-            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
-          push: true
-          tags: ${{ steps.docker_meta_xsession.outputs.tags }}
-          labels: ${{ steps.docker_meta_xsession.outputs.labels }}
-          cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-xsession:master
-            ${{ steps.docker_meta_xsession.outputs.tags }}
-          cache-to: type=inline
-
-      - uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile.wayland-nested
-          build-args: |
-            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
-          push: true
-          tags: ${{ steps.docker_meta_wayland_nested.outputs.tags }}
-          labels: ${{ steps.docker_meta_wayland_nested.outputs.labels }}
-          cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested:master
-            ${{ steps.docker_meta_wayland_nested.outputs.tags }}
-          cache-to: type=inline
-
-      - uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile.wayland-nested-highdpi
-          build-args: |
-            base_image=ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-base@${{ steps.docker_build_base.outputs.digest }}
-          push: true
-          tags: ${{ steps.docker_meta_wayland_nested_highdpi.outputs.tags }}
-          labels: ${{ steps.docker_meta_wayland_nested_highdpi.outputs.labels }}
-          cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}-wayland-nested-highdpi:master
-            ${{ steps.docker_meta_wayland_nested_highdpi.outputs.tags }}
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}:master
+            ${{ steps.docker_meta.outputs.tags }}
           cache-to: type=inline
