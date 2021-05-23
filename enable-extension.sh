@@ -25,7 +25,7 @@ set -ex
 
 UUID=$(unzip -p "$1" metadata.json | jq -r .uuid)
 
-wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 10
+wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 30
 
 # First install the extension.
 gnome-extensions install $1
@@ -42,7 +42,7 @@ else
 fi
 
 sleep 1
-wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 10
+wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 30
 
 # Finally enable the extension.
 gnome-extensions enable $UUID
