@@ -25,6 +25,8 @@ set -ex
 
 UUID=$(unzip -p "$1" metadata.json | jq -r .uuid)
 
+./wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 10
+
 # First install the extension.
 gnome-extensions install $1
 
@@ -39,7 +41,7 @@ else
     busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
 fi
 
-sleep 3
+./wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 10
 
 # Finally enable the extension.
 gnome-extensions enable $UUID
