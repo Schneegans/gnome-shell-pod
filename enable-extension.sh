@@ -41,6 +41,7 @@ else
     busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
 fi
 
+sleep 1
 wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions -t 10
 
 # Finally enable the extension.
