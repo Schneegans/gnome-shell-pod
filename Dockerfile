@@ -3,7 +3,7 @@ FROM fedora:${fedora_version}
 
 RUN dnf update -y &&                                                                     \
     dnf install -y gnome-session-xsession gnome-extensions-app vte291 \
-                   sudo xorg-x11-server-Xvfb xdotool glib2-devel patch jq unzip
+                   sudo xorg-x11-server-Xvfb xdotool xautomation glib2-devel patch jq unzip
 
 COPY systemd /etc/systemd
 
