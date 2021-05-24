@@ -5,7 +5,7 @@ Description=Run nested Wayland gnome session for display %I
 Environment="DISPLAY=%I"
 Environment="MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080@60.0"
 Environment="MUTTER_DEBUG_DUMMY_MONITOR_SCALES=2"
-ExecStart=gnome-shell --nested --wayland
+ExecStart=gnome-shell --nested --wayland --no-x11
 
 [Install]
 WantedBy=default.target
