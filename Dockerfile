@@ -6,6 +6,7 @@ RUN dnf update -y && \
                    gtk3-devel gtk4-devel glib2-devel \
                    xorg-x11-server-Xvfb xdotool xautomation \
                    sudo make patch jq unzip git npm
+RUN npm install -g eslint
 
 COPY systemd /etc/systemd
 
