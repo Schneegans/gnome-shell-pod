@@ -1,4 +1,4 @@
-ARG fedora_version=32
+ARG fedora_version=latest
 FROM fedora:${fedora_version}
 
 RUN dnf update -y && \
