@@ -20,6 +20,6 @@ RUN systemctl unmask systemd-logind.service console-getty.service getty.target &
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
-COPY *.sh /usr/local/bin/
+COPY bin /usr/local/bin
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]
