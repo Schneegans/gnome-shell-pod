@@ -8,7 +8,7 @@ RUN dnf update -y && \
                    sudo make patch jq unzip git npm
 RUN npm install -g eslint
 
-COPY systemd /etc/systemd
+COPY etc /etc
 
 # Start Xvfb via systemd on display :99.
 # Add the gnomeshell user with no password.
