@@ -65,3 +65,8 @@ See https://github.com/amezin/gnome-shell-extension-ddterm:
 - https://github.com/amezin/gnome-shell-extension-ddterm/blob/master/run_test_podman.sh
 
 - https://github.com/amezin/gnome-shell-extension-ddterm/blob/master/.github/workflows/test.yml
+
+## D-Bus
+
+Session D-Bus daemon is listening on TCP port `1234`. To access it from host,
+add `--publish`/`--publish-all` option to `podman run` (see `podman` docs).

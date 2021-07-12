@@ -15,10 +15,15 @@ COPY etc /etc
 RUN systemctl unmask systemd-logind.service console-getty.service getty.target && \
     systemctl enable xvfb@:99.service && \
     systemctl set-default multi-user.target && \
+    systemctl --global disable dbus-broker && \
+    systemctl --global enable dbus-daemon && \
     adduser -m -U -G users,adm,wheel gnomeshell && \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
 COPY bin /usr/local/bin
+
+# dbus port
+EXPOSE 1234
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]
