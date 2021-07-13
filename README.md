@@ -7,6 +7,16 @@ Based on https://github.com/Schneegans/gnome-shell-pod
 
 ## How to use
 
+This container runs systemd, both system and user instances. Probably, you
+could make it work in Docker with [oci-systemd-hook], but it's not packaged
+for Arch (which I use as my workstation distro), or Ubuntu (used on GitHub
+Actions runners). So using Podman seems to be the only viable option.
+
+[oci-systemd-hook]: https://github.com/projectatomic/oci-systemd-hook
+
+Note: currently, rootless Podman doesn't work on GitHub Actions runners,
+you'll have to run it under `sudo`.
+
 ### 1. Start the container using Podman, mount extension sources into `~/.local/share/gnome-shell/extensions/`:
 
 ```sh
