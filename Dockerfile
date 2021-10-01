@@ -1,5 +1,5 @@
 ARG fedora_version=latest
-FROM fedora:${fedora_version}
+FROM registry.fedoraproject.org/fedora:${fedora_version}
 
 RUN dnf update -y && \
     dnf install -y gnome-session-xsession gnome-extensions-app vte291 libxslt \
