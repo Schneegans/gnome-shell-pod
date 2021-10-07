@@ -1,6 +1,8 @@
 on:
-  - push
-  - workflow_dispatch
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "14 1 * * *"
 
 jobs:
   build:
