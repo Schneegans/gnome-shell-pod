@@ -1,12 +1,13 @@
+# Fedora version (e.g. 32, 33, ...) can be passed using --build-arg=fedora_version=...
 ARG fedora_version=latest
 FROM registry.fedoraproject.org/fedora:${fedora_version}
 
+# Install required packages.
 RUN dnf update -y && \
-    dnf install -y gnome-session-xsession gnome-extensions-app vte291 libxslt \
-                   gtk3-devel gtk4-devel glib2-devel \
-                   xorg-x11-server-Xvfb xdotool xautomation \
-                   sudo make patch jq unzip git npm
+    dnf install -y gnome-session-xsession gnome-extensions-app ImageMagick \
+                   xorg-x11-server-Xvfb xdotool xautomation sudo
 
+# Copy system configuration.
 COPY etc /etc
 
 # Start Xvfb via systemd on display :99.
