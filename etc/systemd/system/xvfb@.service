@@ -5,7 +5,7 @@ Before=console-getty.service
 
 [Service]
 Environment="XVFB_SCREENS=-screen 0 1920x1080x24"
-Environment="XVFB_FBDIR=/run"
+Environment="XVFB_FBDIR=/opt"
 ExecStartPre=mkdir -p ${XVFB_FBDIR}
 ExecStart=Xvfb %I $XVFB_SCREENS -fbdir ${XVFB_FBDIR}
 
