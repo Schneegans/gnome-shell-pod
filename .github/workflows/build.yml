@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    name: Deploy Packages
     runs-on: ubuntu-latest
     strategy:
       matrix:
