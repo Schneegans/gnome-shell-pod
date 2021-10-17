@@ -1,8 +1,7 @@
 on:
   push:
-  workflow_dispatch:
-  schedule:
-    - cron: "14 1 * * *"
+    tags:
+      - '**'
 
 jobs:
   build:
