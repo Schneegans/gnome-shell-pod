@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# -------------------------------------------------------------------------------------- #
+# This script waits until the user and the session bus are available.                    #
+# -------------------------------------------------------------------------------------- #
+
 set -e
 
 busctl --system --watch-bind=true status >/dev/null
