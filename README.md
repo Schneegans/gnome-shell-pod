@@ -1,13 +1,13 @@
 # 📦 Run GNOME Shell in a Container!
 
-_:warning: Thanks to the awesome contributions from [@amezin](https://github.com/amezin), I can finally transition the images from Ubuntu to Fedora. Once this is finished, I will improve the documentation._
+_:information_source: I want to thank [@amezin](https://github.com/amezin) for his awesome contributions, which made it possible to transition the images from Ubuntu to Fedora._
 
 ## The Idea
 
 Developing high-quality GNOME Shell extensions is challenging due to various reasons.
 One major issues is the lack of continuous integration possibilities.
 So I thought: Why not try getting GNOME Shell running on the runners of GitHub Actions?
-Of course I know that this is exactly what Podman is not designed to be used for...
+Of course, I know that this is exactly what Podman is not designed to be used for...
 
 **Anyway, here is what already works:**
 - [x] Multiple containers for various GNOME Shell versions:
@@ -15,6 +15,7 @@ Of course I know that this is exactly what Podman is not designed to be used for
   - [x] **gnome-shell-pod-33**: GNOME Shell 3.38.5 (based on Fedora 33)
   - [x] **gnome-shell-pod-34**: GNOME Shell 40.4 (based on Fedora 34)
   - [x] **gnome-shell-pod-35**: GNOME Shell 41.0 (based on Fedora 35)
+  - [x] **gnome-shell-pod-36**: GNOME Shell 42.beta (based on Fedora 36)
 - [x] Choose display manager:
   - [x] Wayland
   - [x] X11
