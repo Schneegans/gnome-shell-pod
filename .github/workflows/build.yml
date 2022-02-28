@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        fedora_version: ["32", "33", "34", "35"]
+        fedora_version: ["32", "33", "34", "35", "36"]
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
