@@ -13,8 +13,8 @@ Of course, I know that this is exactly what Podman is not designed to be used fo
 - [x] Multiple containers for various GNOME Shell versions:
   - [x] **gnome-shell-pod-32**: GNOME Shell 3.36.9 (based on Fedora 32)
   - [x] **gnome-shell-pod-33**: GNOME Shell 3.38.5 (based on Fedora 33)
-  - [x] **gnome-shell-pod-34**: GNOME Shell 40.4 (based on Fedora 34)
-  - [x] **gnome-shell-pod-35**: GNOME Shell 41.0 (based on Fedora 35)
+  - [x] **gnome-shell-pod-34**: GNOME Shell 40.8 (based on Fedora 34)
+  - [x] **gnome-shell-pod-35**: GNOME Shell 41.4 (based on Fedora 35)
   - [x] **gnome-shell-pod-36**: GNOME Shell 42.beta (based on Fedora 36)
 - [x] Choose display manager:
   - [x] Wayland
