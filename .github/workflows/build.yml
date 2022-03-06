@@ -34,6 +34,6 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: |
-            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}:master
+            ghcr.io/${{ github.repository }}-${{ matrix.fedora_version }}:main
             ${{ steps.docker_meta.outputs.tags }}
           cache-to: type=inline
