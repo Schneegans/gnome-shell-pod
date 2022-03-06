@@ -33,7 +33,16 @@ This way we can actually make "screenshots" of GNOME Shell!
 
 ## How Do I Use It?
 
-For the following examples you will need to install [imagemagick](https://imagemagick.org/index.php) (for converting the xvfb framebuffer image) and, obviously, [Podman](https://podman.io/).
+I wrote a series of blog posts in order to explain how I use these containers for continuous integration test of my GNOME Shell extensions.
+For some in-depth examples, you may want to read those:
+
+1. [Bundling the Extension](http://schneegans.github.io/tutorials/2022/02/28/gnome-shell-extensions-ci-01)
+2. [Automated Release Publishing](http://schneegans.github.io/tutorials/2022/03/01/gnome-shell-extensions-ci-02)
+3. [Automated Tests with GitHub Actions](http://schneegans.github.io/tutorials/2022/03/02/gnome-shell-extensions-ci-03)
+
+
+Below, you'll find some simple examples to get you started.
+You will need to install [imagemagick](https://imagemagick.org/index.php) (for converting the xvfb framebuffer image) and, obviously, [Podman](https://podman.io/).
 On Ubuntu-like distributions you can install them with this command:
 
 ```bash
