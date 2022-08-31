@@ -5,7 +5,7 @@ FROM registry.fedoraproject.org/fedora:${fedora_version}
 # Install required packages.
 RUN dnf update -y && \
     dnf install -y gnome-session-xsession gnome-extensions-app ImageMagick \
-                   xorg-x11-server-Xvfb xdotool xautomation sudo
+                   xorg-x11-server-Xvfb gnome-terminal xdotool xautomation sudo
 
 # Copy system configuration.
 COPY etc /etc
