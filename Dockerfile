@@ -4,27 +4,24 @@ FROM registry.fedoraproject.org/fedora:${fedora_version}
 
 # Install required packages.
 RUN dnf update -y && \
-    dnf install -y gnome-session-xsession gnome-extensions-app ImageMagick \
-                   xorg-x11-server-Xvfb gnome-terminal xdotool xautomation sudo
+    dnf --nodocs install -y \
+        gnome-session-xsession gnome-extensions-app \
+        xorg-x11-server-Xvfb gnome-terminal xdotool xautomation sudo && \
+    dnf clean all -y && \
+    rm -rf /var/cache/dnf
 
 # Copy system configuration.
 COPY etc /etc
 
 # Start Xvfb via systemd on display :99.
 # Add the gnomeshell user with no password.
-# Unmask required on Fedora 32
 RUN systemctl unmask systemd-logind.service console-getty.service getty.target && \
     systemctl enable xvfb@:99.service && \
     systemctl set-default multi-user.target && \
-    systemctl --global disable dbus-broker && \
-    systemctl --global enable dbus-daemon && \
-    adduser -m -U -G users,adm,wheel gnomeshell && \
+    adduser -m -U -G users,adm gnomeshell && \
     echo "gnomeshell     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Add the scripts.
 COPY bin /usr/local/bin
-
-# dbus port
-EXPOSE 1234
 
 CMD [ "/usr/sbin/init", "systemd.unified_cgroup_hierarchy=0" ]
