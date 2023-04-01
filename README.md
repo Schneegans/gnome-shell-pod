@@ -18,6 +18,7 @@ Of course, I know that this is exactly what Podman is not designed to be used fo
   - [x] **gnome-shell-pod-36**: GNOME Shell 42.5 (based on Fedora 36)
   - [x] **gnome-shell-pod-37**: GNOME Shell 43.2 (based on Fedora 37)
   - [x] **gnome-shell-pod-38**: GNOME Shell 44.0 (based on Fedora 38)
+  - [x] **gnome-shell-pod-rawhide**: This is based on Fedora Rawhide and rebuilt weekly.
 - [x] Choose display manager:
   - [x] Wayland
   - [x] X11
