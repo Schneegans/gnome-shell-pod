@@ -1,6 +1,16 @@
 # Changelog of the GNOME Shell Podman Container
 
 
+## [Version 16](https://github.com/Schneegans/gnome-shell-pod/tree/v16)
+
+**Release Date:** 2023-04-01
+
+#### Changes
+
+* Fedora 38 has been added to the list of images.
+* There is now a `gnome-shell-pod-rawhide` container which is based on Fedora Rawhide an automatically rebuilt each week.
+
+
 ## [Version 15](https://github.com/Schneegans/gnome-shell-pod/tree/v15)
 
 **Release Date:** 2022-12-31
