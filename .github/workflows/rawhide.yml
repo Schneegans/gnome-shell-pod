@@ -30,6 +30,7 @@ jobs:
             fedora_version=rawhide
           pull: true
           push: true
+          tags: latest
           cache-from: |
             ghcr.io/${{ github.repository }}-rawhide:main
             ${{ steps.docker_meta.outputs.tags }}
