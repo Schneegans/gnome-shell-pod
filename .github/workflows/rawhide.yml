@@ -16,12 +16,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: docker_meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/${{ github.repository }}-rawhide
       - uses: docker/build-push-action@v2
         with:
           build-args: fedora_version=rawhide
+          tags: ghcr.io/schneegans/gnome-shell-pod-rawhide:latest
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
