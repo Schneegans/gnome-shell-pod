@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Deploy Packages
+    name: Deploy Containers
     runs-on: ubuntu-latest
     strategy:
       matrix:
