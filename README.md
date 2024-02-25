@@ -19,6 +19,7 @@ So I thought: Why not try getting GNOME Shell running on the runners of GitHub A
   - [x] [**gnome-shell-pod-37**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-37): GNOME Shell 43.2 (based on Fedora 37)
   - [x] [**gnome-shell-pod-38**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-38): GNOME Shell 44.0 (based on Fedora 38)
   - [x] [**gnome-shell-pod-39**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-39): GNOME Shell 45.1 (based on Fedora 39)
+  - [x] [**gnome-shell-pod-40**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-40): GNOME Shell 46.beta (based on Fedora 40)
   - [x] [**gnome-shell-pod-rawhide**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-rawhide): This is based on Fedora Rawhide and rebuilt weekly.
 - [x] Choose display manager:
   - [x] Wayland
