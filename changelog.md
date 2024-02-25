@@ -7,6 +7,7 @@
 #### Changes
 
 - Fedora 40 has been added to the list of images.
+- The images for Fedora 32, 33, 34, and 35 are not rebuilt anymore. They are still available, but they are not updated anymore.
 
 ## [Version 17](https://github.com/Schneegans/gnome-shell-pod/tree/v17)
 
