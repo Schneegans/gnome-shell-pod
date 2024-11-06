@@ -18,8 +18,9 @@ So I thought: Why not try getting GNOME Shell running on the runners of GitHub A
   - [x] [**gnome-shell-pod-36**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-36): GNOME Shell 42.5 (based on Fedora 36)
   - [x] [**gnome-shell-pod-37**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-37): GNOME Shell 43.2 (based on Fedora 37)
   - [x] [**gnome-shell-pod-38**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-38): GNOME Shell 44.0 (based on Fedora 38)
-  - [x] [**gnome-shell-pod-39**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-39): GNOME Shell 45.1 (based on Fedora 39)
-  - [x] [**gnome-shell-pod-40**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-40): GNOME Shell 46.beta (based on Fedora 40)
+  - [x] [**gnome-shell-pod-39**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-39): GNOME Shell 45.10 (based on Fedora 39)
+  - [x] [**gnome-shell-pod-40**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-40): GNOME Shell 46.6 (based on Fedora 40)
+  - [x] [**gnome-shell-pod-41**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-41): GNOME Shell 47.1 (based on Fedora 41)
   - [x] [**gnome-shell-pod-rawhide**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-rawhide): This is based on Fedora Rawhide and rebuilt weekly.
 - [x] Choose display manager:
   - [x] Wayland
@@ -60,7 +61,7 @@ If you want to play around with GNOME Shell inside the pod, use these commands:
 ```bash
 # Run the container in interactive mode. This will automatically login the
 # gnomeshell user.
-podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK -ti ghcr.io/schneegans/gnome-shell-pod-33
+podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK --cap-add=CAP_SYS_ADMIN -ti ghcr.io/schneegans/gnome-shell-pod-33
 
 # Start GNOME Shell.
 systemctl --user start "gnome-xsession@:99"
@@ -97,7 +98,7 @@ The `gnomeshell` user can run passwordless `sudo`, so you can simply install pac
 
 ```bash
 # Run the container in detached mode.
-POD=$(podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK -td ghcr.io/schneegans/gnome-shell-pod-33)
+POD=$(podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK --cap-add=CAP_SYS_ADMIN -td ghcr.io/schneegans/gnome-shell-pod-33)
 
 do_in_pod() {
   podman exec --user gnomeshell --workdir /home/gnomeshell "${POD}" set-env.sh "$@"

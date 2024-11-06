@@ -5,7 +5,7 @@ FROM registry.fedoraproject.org/fedora:${fedora_version}
 # Install required packages.
 RUN dnf update -y && \
     dnf --nodocs install -y \
-        gnome-session-xsession gnome-extensions-app \
+        gnome-session-xsession gnome-extensions-app xorg-x11-xinit \
         xorg-x11-server-Xvfb gnome-terminal xdotool xautomation sudo && \
     dnf clean all -y && \
     rm -rf /var/cache/dnf
