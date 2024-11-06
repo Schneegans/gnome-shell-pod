@@ -1,5 +1,15 @@
 # Changelog of the GNOME Shell Podman Container
 
+## [Version 19](https://github.com/Schneegans/gnome-shell-pod/tree/v19)
+
+**Release Date:** 2024-11-06
+
+#### Changes
+
+- Fedora 41 has been added to the list of images.
+- `xorg-x11-xinit` is now installed explicitly in the images as Fedora 41 does not include it anymore by default.
+- The images for Fedora 36, 37, and 38 are not rebuilt anymore. They are still available, but they are not updated anymore.
+
 ## [Version 18](https://github.com/Schneegans/gnome-shell-pod/tree/v18)
 
 **Release Date:** 2024-02-25
