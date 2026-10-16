@@ -1,0 +1,12 @@
+[org/gnome/shell]
+# Disable the welcome dialog.
+welcome-dialog-last-shown-version='9999'
+
+[org/gnome/desktop/screensaver]
+lock-enabled=false
+
+[org/gnome/desktop/notifications]
+show-banners=false
+
+[org/gnome/desktop/interface]
+enable-animations=false

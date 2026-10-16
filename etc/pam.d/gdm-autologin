@@ -1,0 +1,10 @@
+#%PAM-1.0
+auth       sufficient  pam_permit.so
+account    sufficient  pam_permit.so
+password   include     system-auth
+session    required    pam_loginuid.so
+session    optional    pam_keyinit.so force revoke
+session    required    pam_namespace.so
+session    include     system-auth
+session    optional    pam_gnome_keyring.so auto_start
+session    include     postlogin
