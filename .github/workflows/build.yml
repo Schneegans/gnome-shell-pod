@@ -16,6 +16,10 @@ on:
         required: true
         type: boolean
         default: false
+      tag:
+        description: "Tag for the images to build"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -56,6 +60,7 @@ jobs:
           tags: |
             type=ref,event=tag
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=${{ inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.tag != '' }}
           labels: |
             org.opencontainers.image.title=gnome-shell-pod-${{ matrix.fedora_version }}
             org.opencontainers.image.description=Headless Wayland GNOME Shell container for extension testing (Fedora ${{ matrix.fedora_version }})

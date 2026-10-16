@@ -10,6 +10,10 @@ on:
         required: true
         type: boolean
         default: true
+      tag:
+        description: "Tag for the images to build"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -42,7 +46,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}-rawhide
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.event_name == 'schedule' }}
+            type=raw,value=${{ inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.tag != '' }}
           labels: |
             org.opencontainers.image.title=gnome-shell-pod-rawhide
             org.opencontainers.image.description=Headless Wayland GNOME Shell container for extension testing (Fedora Rawhide)
