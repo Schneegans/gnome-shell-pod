@@ -1,144 +1,156 @@
-# 📦 Run GNOME Shell in a Container!
+# 📦 Run GNOME Shell in a Container
 
 _:information_source: I want to thank [@amezin](https://github.com/amezin) for his awesome contributions, which made it possible to transition the images from Ubuntu to Fedora._
 
 ## The Idea
 
 Developing high-quality GNOME Shell extensions is challenging due to various reasons.
-One major issues is the lack of continuous integration possibilities.
-So I thought: Why not try getting GNOME Shell running on the runners of GitHub Actions?
+One major issue is the lack of continuous integration possibilities.
+So I thought: Why not get GNOME Shell running headlessly on local containers and GitHub Actions runners?
 
-**Anyway, here is what already works:**
+**Here is what works:**
 
-- [x] Multiple containers for various GNOME Shell versions:
-  - [x] [**gnome-shell-pod-32**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-32): GNOME Shell 3.36.9 (based on Fedora 32)
-  - [x] [**gnome-shell-pod-33**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-33): GNOME Shell 3.38.5 (based on Fedora 33)
-  - [x] [**gnome-shell-pod-34**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-34): GNOME Shell 40.9 (based on Fedora 34)
-  - [x] [**gnome-shell-pod-35**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-35): GNOME Shell 41.9 (based on Fedora 35)
-  - [x] [**gnome-shell-pod-36**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-36): GNOME Shell 42.5 (based on Fedora 36)
-  - [x] [**gnome-shell-pod-37**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-37): GNOME Shell 43.2 (based on Fedora 37)
-  - [x] [**gnome-shell-pod-38**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-38): GNOME Shell 44.0 (based on Fedora 38)
-  - [x] [**gnome-shell-pod-39**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-39): GNOME Shell 45.10 (based on Fedora 39)
-  - [x] [**gnome-shell-pod-40**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-40): GNOME Shell 46.6 (based on Fedora 40)
-  - [x] [**gnome-shell-pod-41**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-41): GNOME Shell 47.1 (based on Fedora 41)
-  - [x] [**gnome-shell-pod-rawhide**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-rawhide): This is based on Fedora Rawhide and rebuilt weekly.
-- [x] Choose display manager:
-  - [x] Wayland
-  - [x] X11
-- [x] You can launch other applications, such as `gnome-control-center`.
-- [x] You can make "screenshots" of GNOME Shell and transfer them to host memory.
-- [x] You can install a GNOME Shell extension from host memory and enable it.
-- [x] You can use `xdotool` to interact with the extension.
-- [x] All of this works locally and on the GitHub hosted runners!
+- [x] Multiple containers for modern GNOME Shell versions:
+  - [x] [**gnome-shell-pod-41**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-41): GNOME Shell 47 (based on Fedora 41)
+  - [x] [**gnome-shell-pod-42**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-42): GNOME Shell 48 (based on Fedora 42)
+  - [x] [**gnome-shell-pod-43**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-43): GNOME Shell 49 (based on Fedora 43)
+  - [x] [**gnome-shell-pod-44**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-44): GNOME Shell 50 (based on Fedora 44)
+  - [x] [**gnome-shell-pod-rawhide**](https://github.com/Schneegans/gnome-shell-pod/pkgs/container/gnome-shell-pod-rawhide): Based on Fedora Rawhide, rebuilt weekly.
+- [x] **Native Wayland Session**: Runs headlessly under Wayland (`wayland-0`) using Fedora's systemd headless session architecture.
+- [x] **1920x1080 Headless Virtual Monitor**: Pre-configured virtual display allows full UI rendering without physical GPU hardware.
+- [x] **High-Resolution Screenshots**: Native `screenshot.sh` captures crisp PNG screenshots directly via GNOME Shell's D-Bus interface without requiring ImageMagick.
+- [x] **Dynamic Extension Management**: Copy your extension, call `reload-extensions.sh`, and enable it via `gnome-extensions enable`.
+- [x] **JavaScript Automation**: Unsafe mode is enabled by default, allowing tests to run arbitrary JavaScript directly in GNOME Shell using `org.gnome.Shell.Eval`.
+- [x] **CI Tested**: Automated test suite validates container startup, D-Bus interfaces, and extension lifecycle on every change.
 
 ## How Does It Work?
 
-A user called "gnomeshell" will auto-login via `systemd-logind.service.d` and run `gnome-shell` on `xvfb`.
-The framebuffer of `xvfb` is mapped to a file which can be copied to host memory and converted to an image.
-This way we can actually make "screenshots" of GNOME Shell!
+Starting with Version 20, `gnome-shell-pod` has transitioned from legacy X11/Xvfb to a modern, Wayland-native architecture.
+The container boots systemd as PID 1, which automatically launches Fedora's `gnome-headless-session@gnomeshell.service`.
+GDM's headless login establishes the session and user systemd manager, starting GNOME Shell on Wayland with a persistent 1920x1080 virtual monitor.
+
+The compositor exposes:
+
+- **Wayland display**: `/run/user/1000/wayland-0`
+- **User D-Bus**: `/run/user/1000/bus`
+- **Xwayland display**: `:0` (if X11 applications are launched)
 
 ## How Do I Use It?
 
-I wrote a series of blog posts in order to explain how I use these containers for continuous integration test of my GNOME Shell extensions.
-For some in-depth examples, you may want to read those:
-
-1. [Bundling the Extension](http://schneegans.github.io/tutorials/2022/02/28/gnome-shell-extensions-ci-01)
-2. [Automated Release Publishing](http://schneegans.github.io/tutorials/2022/03/01/gnome-shell-extensions-ci-02)
-3. [Automated Tests with GitHub Actions](http://schneegans.github.io/tutorials/2022/03/02/gnome-shell-extensions-ci-03)
-
-Below, you'll find some simple examples to get you started.
-You will need to install [imagemagick](https://imagemagick.org/index.php) (for converting the xvfb framebuffer image) and, obviously, [Podman](https://podman.io/).
-On Ubuntu-like distributions you can install them with this command:
+You will need [Podman](https://podman.io/) (or Docker). On Ubuntu-like distributions:
 
 ```bash
-sudo apt-get install imagemagick podman
+sudo apt-get install podman
 ```
 
 ### Basic Usage
 
-If you want to play around with GNOME Shell inside the pod, use these commands:
+Run the container in detached mode:
 
 ```bash
-# Run the container in interactive mode. This will automatically login the
-# gnomeshell user.
-podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK --cap-add=CAP_SYS_ADMIN -ti ghcr.io/schneegans/gnome-shell-pod-33
-
-# Start GNOME Shell.
-systemctl --user start "gnome-xsession@:99"
-
-# For example, you can run this command inside the container:
-DISPLAY=:99 gnome-control-center
-```
-
-Now use another terminal on your host to capture and display a screenshot.
-
-```bash
-# Copy the framebuffer of xvfb.
-podman cp $(podman ps -q -n 1):/opt/Xvfb_screen0 .
-
-# Convert it to jpeg.
-convert xwd:Xvfb_screen0 capture.jpg
-
-# And finally display the image.
-# This way we can see that GNOME Shell is actually up and running!
-eog capture.jpg
-```
-
-<p align="center">
-  <img src="pictures/capture2.jpg" />
-</p>
-
-You can kill the `gnome-control-center` with <kbd>Ctrl</kbd>+<kbd>C</kbd> in the container and then poweroff the container with `poweroff`.
-
-### Detached Mode
-
-In this example we will download some pictures inside the container and make GNOME Shell use one of them as background image.
-The `gnomeshell` user can run passwordless `sudo`, so you can simply install packages.
-`podman exec --user gnomeshell` can be used to run arbitrary commands inside the running container. However, many commands interacting with GNOME Shell will require a connection to the D-Bus. To make this easier, the images contain a `/local/bin/set-env.sh` script, which sets all required environment variables.
-
-```bash
-# Run the container in detached mode.
-POD=$(podman run --rm --cap-add=SYS_NICE --cap-add=IPC_LOCK --cap-add=CAP_SYS_ADMIN -td ghcr.io/schneegans/gnome-shell-pod-33)
+POD=$(podman run --rm --systemd=always --cap-add=SYS_NICE --cap-add=IPC_LOCK --cap-add=CAP_SYS_ADMIN -td ghcr.io/schneegans/gnome-shell-pod-44)
 
 do_in_pod() {
   podman exec --user gnomeshell --workdir /home/gnomeshell "${POD}" set-env.sh "$@"
 }
+```
 
-# Install the gnome-backgrounds package.
-do_in_pod sudo dnf -y install gnome-backgrounds
+Wait until the user bus, Wayland socket, and GNOME Shell are ready:
 
-# Set GNOME Shell's background image. This requires a D-Bus connection,
-# so we wrap the command in the set-env.sh script.
-do_in_pod gsettings set org.gnome.desktop.background picture-uri \
-          "file:///usr/share/backgrounds/gnome/adwaita-day.jpg"
-
-# Wait until the user bus is available.
+```bash
 do_in_pod wait-user-bus.sh
+do_in_pod wait-dbus-interface.sh -d org.gnome.Shell -o /org/gnome/Shell -i org.gnome.Shell.Extensions
+```
 
-# Start GNOME Shell.
-do_in_pod systemctl --user start "gnome-xsession@:99"
+### Installing and Testing an Extension
 
-# Wait some time until GNOME Shell has been started.
-sleep 3
+Copy your extension into the container:
 
-# Now make a screenshot and show it!
-podman cp ${POD}:/opt/Xvfb_screen0 . && \
-       convert xwd:Xvfb_screen0 capture.jpg && \
-       eog capture.jpg
+```bash
+podman cp ./my-extension "${POD}:/home/gnomeshell/.local/share/gnome-shell/extensions/my-extension@example.com"
+```
 
-# Now we can stop the container again.
-podman stop ${POD}
+Reload extensions and enable it:
+
+```bash
+do_in_pod reload-extensions.sh
+do_in_pod gnome-extensions enable my-extension@example.com
+do_in_pod gnome-extensions info my-extension@example.com
+```
+
+### Inspecting Shell State & JavaScript Evaluation
+
+Because `--unsafe-mode` is enabled, you can run JavaScript expressions directly in the GNOME Shell process:
+
+```bash
+do_in_pod gdbus call --session \
+    --dest org.gnome.Shell \
+    --object-path /org/gnome/Shell \
+    --method org.gnome.Shell.Eval "imports.ui.main.sessionMode.currentMode"
+```
+
+### Taking Screenshots
+
+You can capture a full-resolution 1920x1080 PNG screenshot at any time using `screenshot.sh`:
+
+```bash
+do_in_pod screenshot.sh /tmp/capture.png
+podman cp "${POD}:/tmp/capture.png" ./capture.png
+```
+
+### Stopping the Container
+
+```bash
+podman stop "${POD}"
+```
+
+## Building and Testing Locally
+
+To build an image locally:
+
+```bash
+# Build the default image (Fedora 44)
+./scripts/build.sh
+
+# Build a specific version (41, 42, 43, 44, rawhide, or 'all')
+./scripts/build.sh 44
+
+# Build and immediately run the verification test suite
+./scripts/build.sh 44 --test
+```
+
+To run the verification test suite on any existing image:
+
+```bash
+# Tests local/gnome-shell-pod:44 by default
+./scripts/test.sh
+
+# Or specify any local or remote image tag
+./scripts/test.sh local/gnome-shell-pod:44
+```
+
+## Capturing Documentation Screenshots
+
+To automate generating the 3 preview screenshots (`capture1.jpg`, `capture2.jpg`, and `capture3.jpg`):
+
+```bash
+# Generates the 3 canonical preview images into pictures/
+./scripts/capture.sh
+
+# Or specify a custom image tag and output folder
+./scripts/capture.sh local/gnome-shell-pod:44 ./pictures/44
 ```
 
 <p align="center">
-  <img src="pictures/capture5.jpg" />
+  <img src="pictures/44/capture1.jpg" alt="Desktop with Wallpaper" width="32%" />
+  <img src="pictures/44/capture2.jpg" alt="GNOME Settings" width="32%" />
+  <img src="pictures/44/capture3.jpg" alt="Show Applications" width="32%" />
 </p>
 
 ## :octocat: Contributing
 
 Commits should start with a Capital letter and should be written in present tense (e.g. **:tada: Add cool new feature** instead of **:tada: Added cool new feature**).
 You should also start your commit message with **one** applicable emoji.
-This does not only look great but also makes you rethink what to add to a commit. Make many but small commits!
 
 | Emoji                                                     | Description                                   |
 | --------------------------------------------------------- | --------------------------------------------- |
